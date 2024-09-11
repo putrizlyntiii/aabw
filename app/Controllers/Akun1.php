@@ -50,4 +50,15 @@ class Akun1 extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();  
         }
     }
+    
+    public function update($id)
+    {
+        $data = [
+            'kode_akun1' => $this->request->getVar('kode_akun1'),
+            'kode_akun1' => $this->request->getVar('nama_akun1'),
+        ];
+        $this->db->table('akun1s')->where(['id_akun1 => $id'])->update($data);
+        return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil di Update');
+        // ISI YA PUT
+    }
 }

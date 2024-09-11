@@ -21,12 +21,11 @@
                     <input type="hidden" name="_method" value="PUT">
                     <div class="form-group">
                         <label>Kode Akun 1</label>
-                        <input type="text" class="form-control" name="kode_akun1" placeholder="Kode Akun" value="<?= $dtakun1->id_akun1 ?>" required>
+                        <input type="text" class="form-control" name="kode_akun1" placeholder="Kode Akun" value="<?= $dtakun1->kode_akun1 ?>" 
                     </div>
                     <div class="form-group">
                         <label>Nama Akun 1</label>
-                        <input type="text" class="form-control" name="nama_akun1" placeholder="Nama Akun" value="<?= $dtakun1->nama_akun1 ?>" required>
-                    </div>
+                        <input type="text" class="form-control" name="nama_akun1" placeholder="Nama Akun" value="<?= $dtakun1->nama_akun1 ?>" 
                     <div class="form-group">
                         <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane"></i> Update</button>
                         <button type="submit" class="btn btn-secondary">Reset</button>
