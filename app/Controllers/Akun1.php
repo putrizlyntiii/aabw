@@ -17,7 +17,7 @@ class Akun1 extends BaseController
 
         //dd($query->getResult());
         // dd($query);
-        
+
     }
 
     public function new()
@@ -39,10 +39,10 @@ class Akun1 extends BaseController
     public function edit($id = null)
     {
         if ($id != null) {
-            $query= $this->db->table('akun1s')->getWhere(['id_akun1'=> $id]);
-            if ($suery->resultID->num_rows > 0) {
+            $query = $this->db->table('akun1s')->getWhere(['id_akun1' => $id]);
+            if ($query->getNumRows() > 0) {
                 $data['dtakun1'] = $query->getRow();
-                return view('dtakun1/edit', $data);
+                return view('akun1/edit', $data);
             } else {
                 throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
             }

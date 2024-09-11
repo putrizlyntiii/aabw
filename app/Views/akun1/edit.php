@@ -6,7 +6,7 @@
 <section class="section">
     <div class="section-header">
         <!--<h1>Blank Page</h1>-->
-        <a href="<?= site_url('akun1/new') ?>" class="btn btn-primary"> Back</a>
+        <a href="<?= site_url('akun1') ?>" class="btn btn-primary"> Back</a>
     </div>
     <div class="section-body">
         <!-- dinamis -->
@@ -21,11 +21,11 @@
                     <input type="hidden" name="_method" value="PUT">
                     <div class="form-group">
                         <label>Kode Akun 1</label>
-                        <input type="text" class="form-control" name="kode_akun1" placeholder="Kode Akun" required>
+                        <input type="text" class="form-control" name="kode_akun1" placeholder="Kode Akun" value="<?= $dtakun1->id_akun1 ?>" required>
                     </div>
                     <div class="form-group">
                         <label>Nama Akun 1</label>
-                        <input type="text" class="form-control" name="nama_akun1" placeholder="Nama Akun" required>
+                        <input type="text" class="form-control" name="nama_akun1" placeholder="Nama Akun" value="<?= $dtakun1->nama_akun1 ?>" required>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane"></i> Update</button>
