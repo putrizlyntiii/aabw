@@ -62,8 +62,8 @@ class Akun1 extends BaseController
     }
     public function destroy($id)
     {
-        $this->db->table('akun1s')->where(['id_akun1'=> $id])->delete($data);
-        return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil di Update'); 
+        $this->db->table('akun1s')->where(['id_akun1'=> $id])->delete();
+        return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil dihapus!'); 
     }
       
 }

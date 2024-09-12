@@ -12,7 +12,7 @@
   <!-- ini untuk menangkap session success dengan bawaan with -->
   <?php if (session()->getFlashdata('success')) : ?>
     <div class="alert alert-success alert-dismissible show fade">
-      <div class="alser-body">
+      <div class="alert-body">
         <button class="close" data-dismiss="alert">x</button>
         <?= session()->getFlashdata('success'); ?>
       </div>
@@ -21,7 +21,7 @@
 
   <?php if (session()->getFlashdata('error')) : ?>
     <div class="alert alert-danger alert-dismissible show fade">
-      <div class="alser-body">
+      <div class="alert-body">
         <button class="close" data-dismiss="alert">x</button>
         <?= session()->getFlashdata('error'); ?>
       </div>
@@ -53,7 +53,7 @@
                   <td><?= $value->nama_akun1 ?></td>
                   <td class="text center" style="width:15%">
                     <a href="<?= site_url ('akun1/edit/' . $value->id_akun1) ?>" class="btn btn-warning"><i class="fas fa-pencil-alt btn-small"></i> Edit</a>
-                    <form action="<? site_url('akun1/' . $value->id_akun1) ?>" method="post" id="del-<?= $value->id_akun1 ?>" class="d-inline">
+                    <form action="<?= site_url('akun1/' . $value->id_akun1) ?>" method="post" id="del-<?= $value->id_akun1 ?>" class="d-inline">
                         <?= csrf_field() ?>;
                         <input type="hidden" name="_method" value="DELETE">
                         <button class="btn btn-danger btn-small" data-confirm="Hapus Data....? | Apakah anda Yakin ....?" data-confirm-yes="hapus(<?= $value->id_akun1 ?>)"><i class="fas fa-trash"></i> Del </button>
