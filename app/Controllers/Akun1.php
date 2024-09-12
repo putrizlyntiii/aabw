@@ -2,16 +2,22 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Exceptions\PageNotFoundException;
-
 class Akun1 extends BaseController
 {
+
     public function index()
     {
+
         $builder = $this->db->table('akun1s');
         $query = $builder->get();
+
+        $query = $this->db->query("SELECT * FROM akun1s");
         $data['dtakun1'] = $query->getResult();
         return view('akun1/index', $data);
+
+        //dd($query->getResult());
+        // dd($query);
+
     }
 
     public function new()
@@ -21,6 +27,7 @@ class Akun1 extends BaseController
 
     public function store()
     {
+        $data = $this->request->getPost();
         $data = [
             'kode_akun1' => $this->request->getVar('kode_akun1'),
             'nama_akun1' => $this->request->getVar('nama_akun1'),
@@ -28,6 +35,7 @@ class Akun1 extends BaseController
         $this->db->table('akun1s')->insert($data);
         return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil di Simpan');
     }
+
 
     public function edit($id = null)
     {
@@ -37,13 +45,12 @@ class Akun1 extends BaseController
                 $data['dtakun1'] = $query->getRow();
                 return view('akun1/edit', $data);
             } else {
-                throw PageNotFoundException::forPageNotFound();
+                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
             }
         } else {
-            throw PageNotFoundException::forPageNotFound();
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();  
         }
     }
-
     public function update($id)
     {
         $data = [
@@ -53,10 +60,10 @@ class Akun1 extends BaseController
         $this->db->table('akun1s')->where(['id_akun1' => $id])->update($data);
         return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil di Update');
     }
-
     public function destroy($id)
     {
-        $this->db->table('akun1s')->where(['id_akun1' => $id])->delete();
-        return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil di Hapus');
+        $this->db->table('akun1s')->where(['id_akun1'=> $id])->delete($data);
+        return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil di Update'); 
     }
+      
 }

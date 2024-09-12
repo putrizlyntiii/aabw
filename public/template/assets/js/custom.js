@@ -7,10 +7,6 @@
 
 "use strict";
 
-function hapus(id){
-    $('#del-'+id).submit();
-}
-
 // confirmasi delete 
 function hapus(id) {
     $('#del-'+id).submit()
