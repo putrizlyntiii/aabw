@@ -2,22 +2,16 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\Exceptions\PageNotFoundException;
+
 class Akun1 extends BaseController
 {
-
     public function index()
     {
-
         $builder = $this->db->table('akun1s');
         $query = $builder->get();
-
-        $query = $this->db->query("SELECT * FROM akun1s");
         $data['dtakun1'] = $query->getResult();
         return view('akun1/index', $data);
-
-        //dd($query->getResult());
-        // dd($query);
-
     }
 
     public function new()
@@ -27,7 +21,6 @@ class Akun1 extends BaseController
 
     public function store()
     {
-        $data = $this->request->getPost();
         $data = [
             'kode_akun1' => $this->request->getVar('kode_akun1'),
             'nama_akun1' => $this->request->getVar('nama_akun1'),
@@ -44,21 +37,26 @@ class Akun1 extends BaseController
                 $data['dtakun1'] = $query->getRow();
                 return view('akun1/edit', $data);
             } else {
-                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+                throw PageNotFoundException::forPageNotFound();
             }
         } else {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();  
+            throw PageNotFoundException::forPageNotFound();
         }
     }
-    
+
     public function update($id)
     {
         $data = [
             'kode_akun1' => $this->request->getVar('kode_akun1'),
-            'kode_akun1' => $this->request->getVar('nama_akun1'),
+            'nama_akun1' => $this->request->getVar('nama_akun1'),
         ];
-        $this->db->table('akun1s')->where(['id_akun1 => $id'])->update($data);
+        $this->db->table('akun1s')->where(['id_akun1' => $id])->update($data);
         return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil di Update');
-        // ISI YA PUT
+    }
+
+    public function destroy($id)
+    {
+        $this->db->table('akun1s')->where(['id_akun1' => $id])->delete();
+        return redirect()->to(site_url('akun1'))->with('success', 'Data Berhasil di Hapus');
     }
 }

@@ -53,10 +53,18 @@
                   <td><?= $value->nama_akun1 ?></td>
                   <td class="text center" style="width:15%">
                     <a href="<?= site_url ('akun1/edit/' . $value->id_akun1) ?>" class="btn btn-warning"><i class="fas fa-pencil-alt btn-small"></i> Edit</a>
-                    <a href="" class="btn btn-danger"><i class="fas fa-trash btn-small"></i> Del</a>
+                    <form action="<? site_url('akun1/' . $value->id_akun1) ?>" method="post" id="del-<? $value->id_akun1 ?>" class="d-inline">
+                        <?= csrf_field() ?>;
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="btn btn-danger btn-small" data-confirm="Hapus Data....? | Apakah anda Yakin ....?" data-confirm-yes="hapus(<?= $value->id_akun1 ?>)"><i class="fas fa-trash"></i> Del </button>
+
+                    </form>
+
                   </td>
                 </tr>
-              <?php endforeach; ?>
+
+                <?php endforeach; ?>
+
             </tbody>
           </table>
         </div>
