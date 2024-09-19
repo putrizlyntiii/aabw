@@ -1,6 +1,10 @@
 <?= $this->extend('layout/backend') ?>;
 
 
+<?= $this->section('content') ?> 
+<title>SIA-IPB &mdash; akun1</title>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 
 <section class="section">
@@ -36,7 +40,7 @@
       </div>
       <div class="card-body p-4">
         <div class="table-responsive">
-          <table class="table table-striped table-md">
+          <table class="table table-striped table-md" id="myTable">
             <thead>
               <tr>
                 <th>No</th>
