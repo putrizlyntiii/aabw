@@ -4,28 +4,28 @@ namespace App\Controllers;
 
 use App\Models\ModelAkun2;
 use App\Models\ModelAkun3;
-
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
 class Akun3 extends ResourceController
 {
     function __construct()
     {
-        $this->objAkun2 = new ModelAkun2(); 
-        $this->objAkun3 = new ModelAkun3();
+        $this->objAkun2=new ModelAkun2();
+        $this->objAkun3=new ModelAkun3();
         $this->db = \Config\Database::connect();
     }
     /**
      * Return an array of resource objects, themselves in array format.
      *
-     * @return mixed
+     * @return ResponseInterface
      */
     public function index()
     {
-        $data['dtakun3'] = $this->objAkun3->ambilrelasi();
-        return view('akun3/index', $data);
+        $data['dtakun3']=$this->objAkun3->ambilrelasi();
+        return view('akun3/index',$data);
     }
-    
+
     /**
      * Return the properties of a resource object.
      *
@@ -37,7 +37,7 @@ class Akun3 extends ResourceController
     {
         //
     }
-    
+
     /**
      * Return a new resource object, with default properties.
      *
@@ -46,10 +46,11 @@ class Akun3 extends ResourceController
     public function new()
     {
         $builder = $this->db->table('akun1s');
-        $query = $builder->get();
-        $data['dtakun2'] = $this->objAkun2->findAll();
-        $data['dtakun1'] = $query->getResult();
-        return view('akun3/new', $data);
+        $query=$builder->get();
+
+        $data['dtakun2']=$this->objAkun2->findAll();
+        $data['dtakun1']=$query->getResult();
+        return view('akun3/new',$data);
     }
 
     /**
@@ -59,12 +60,12 @@ class Akun3 extends ResourceController
      */
     public function create()
     {
-        $data = $this->request->getPost();
-        $data = [
-            'kode_akun3' => $this->request->getVar('kode_akun3'),
-            'nama_akun3' => $this->request->getVar('nama_akun3'),
-            'kode_akun2' => $this->request->getVar('kode_akun2'),
-            'kode_akun1' => $this->request->getVar('kode_akun1'),
+        $data=$this->request->getPost();
+        $data=[
+            'kode_akun3'=> $this->request->getVar('kode_akun3'),
+            'nama_akun3'=> $this->request->getVar('nama_akun3'), 
+            'kode_akun2'=> $this->request->getVar('kode_akun2'),
+            'kode_akun1'=> $this->request->getVar('kode_akun1'),
         ];
         $this->db->table('akun3s')->insert($data);
         return redirect()->to(site_url('akun3'))->with('success', 'Data Berhasil di Simpan');
@@ -80,18 +81,19 @@ class Akun3 extends ResourceController
     public function edit($id = null)
     {
         $builder = $this->db->table('akun1s');
-        $query = $builder->get();
+        $query=$builder->get();
 
-        $akun2 = $this->objAkun2->findAll();
-        $akun3 = $this->objAkun3->find($id);
-        if (is_object($akun3)) {
-            $data['dtakun3'] = $akun3;
-            $data['dtakun2'] = $akun2;
-            $data['dtakun1'] = $query->getResult();
+        $akun2=$this->objAkun2->findAll();
+        $akun3=$this->objAkun3->find($id);
+
+        if(is_object($akun3)){
+            $data['dtakun3']=$akun3;
+            $data['dtakun2']=$akun2;
+            $data['dtakun1']=$query->getResult();
             return view('akun3/edit', $data);
-            } else {    
-                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-            }
+        }else{
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
     }
 
     /**
@@ -109,8 +111,9 @@ class Akun3 extends ResourceController
             'kode_akun2' => $this->request->getVar('kode_akun2'),
             'kode_akun1' => $this->request->getVar('kode_akun1'),
         ];
-        $this->db->table('akun3s')->where(['id_akun3' => $id])->update($data);
-        return redirect()->to(site_url('akun3'))->with('success', 'Data Berhasil di Update');
+        if ($this->db->table('akun3s')->where(['id_akun3' => $id])->update($data)) {
+         return redirect()->to(site_url('akun3'))->with('success', 'Data Berhasil di Update');
+        }
     }
 
     /**
@@ -122,7 +125,7 @@ class Akun3 extends ResourceController
      */
     public function delete($id = null)
     {
-        $this->db->table('akun3s')->where(['id_akun3'=> $id])->delete();
-        return redirect()->to(site_url('akun3'))->with('success', 'Data Berhasil dihapus!');
+        $this->db->table('akun3s')->where(['id_akun3' => $id])->delete();
+        return redirect()->to(site_url('akun3'))->with('success','Data Berhasil Dihapus');
     }
 }

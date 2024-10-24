@@ -4,15 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-
+    
     <?= $this->renderSection("title") ?>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="<?= base_url() ?>/template/node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= base_url() ?>/template/node_modules/datatables.net-bs4/css/data/Tables.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>/template/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>/template/node_modules/@fortawesome/fontawesome-free/css/all.css">
     
-
 
     <!-- CSS Libraries -->
 
@@ -246,20 +245,19 @@
             <div class="main-sidebar">
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
-                        <a href="#">Akuntansi Website</a>
+                        <a href="#">Akuntansi WEB</a>
                     </div>
                     <div class="sidebar-brand sidebar-brand-sm">
                         <a href="index.html">St</a>
                     </div>
-
                     <ul class="sidebar-menu">
-                        <!-- Ini cara memanggil menu -->
-                        <?= $this->include("layout/menu") ?>
-                    </ul>
+                    <!-- Ini cara memanggil menu -->
+                    <?= $this->include("layout/menu") ?>
+                  </ul>
 
                     <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
                         <a href="https://getstisla.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split">
-                            <i class="fas fa-rocket"></i> SIA AKN - SV IPB
+                            <i class="fas fa-rocket"></i> SIA AKN SV-IPB
                         </a>
                     </div>
                 </aside>
@@ -267,9 +265,8 @@
 
             <!-- Main Content -->
             <div class="main-content">
-                <?= $this->renderSection("content") ?>
+                <?=$this->renderSection("content") ?>
             </div>
-
             <footer class="main-footer">
                 <div class="footer-left">
                     Copyright &copy; 2024 <div class="bullet"></div> Design By <a href="https://nauval.in/">Putri Zaliyanti Ramadhani</a>
@@ -287,7 +284,9 @@
     <script src="<?= base_url() ?>/template/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="<?= base_url() ?>/template/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="<?= base_url() ?>/template/node_modules/nicescroll/dist/jquery.nicescroll.min.js"></script>
+   
     <script src="<?= base_url() ?>/template/assets/js/stisla.js"></script>
+
 
 
     <!-- JS Libraies -->

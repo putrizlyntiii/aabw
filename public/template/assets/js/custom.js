@@ -1,45 +1,24 @@
-/**
- *
- * You can write your JS code here, DO NOT touch the default style file
- * because it will make it harder for you to update.
- *
- */
-
 "use strict";
 
-// confirmasi delete 
-function hapus(id) {
-    $('#del-'+id).submit()
-};
+function hapus(id){
+    $('#del-'+id).submit();
+}
 
-// menu dinamis
+//menu dinamis
 var path = location.pathname.split('/')
 var url = location.origin + '/' + path[1]
-$('ul.sidebar-menu li a').each(function () {
-    if ($(this).attr('href').indexOf(url) !== -1) {
-        $(this).parent().addClass('active').parent().parent('li').addClass('active')
-    }
+$('ul.sidebar-menu li a').each(function(){
+if ($(this).attr('href').indexOf(url) !==-1) {
+    $(this).parent().addClass('active').parent().parent('li').addClass('active')
+}
 });
 
-// datatables dan pagination
-$(document).ready(function () {
+//pagination
+$(document).ready(function() {
     $('#myTable').DataTable();
 });
 
-$(document).ready(function () {
-    $('#repotTable').DataTable({
-        "searching": false,
-        "paging": false,
-        "ordering":false,
-    });
-});
-
-
-// input transaksi
 function Barisbaru() {
-    $(document).ready(function() {
-        $("[data-toggle='tooltip']").tooltip();
-    });
     var Nomor = $("#tableLoop tbody tr").length + 1;
     var Baris = '<tr>';
         Baris += '<td class="text-center">' + Nomor + '</td>';
@@ -74,7 +53,7 @@ $(document).ready(function () {
     for (A = 1; A <= 1; A++) {
         Barisbaru();
     }
-    $('#Barisbaru').click(function(e) {
+    $('#BarisBaru').click(function(e) {
         e.preventDefault();
         Barisbaru();
     });
@@ -114,27 +93,3 @@ function FormSelectStatus(Nomor) {
             $('#id_status' + Nomor).html(output.join(''));
         });
 }
-
-function hitung() {
-    var nilai = $('input[name="nilai"]').val();
-    var waktu = $('input[name="waktu"]').val();
-
-    var jumlah = parseInt(nilai) / parseInt(waktu);
-    $('input[name="jumlah"]').val(jumlah);
-    
-    // $("#jumlah").attr("value", jumlah);
-    // if (!isNaN()) {
-    //         $('input[name="jumlah"]').val(hasil);   
-    //     } else {
-    //         $('input[name="jumlah"]').val(0);   
-    // }
-}
-
-    
-
-// $(".penyesuaian").keyup(function() {
-//     var nilai = parseInt($("#nilai").val())
-//     var waktu = parseInt($("#waktu").val())
-//     var jumlah = nilai / waktu;
-//     $("#jumlah").attr("value", jumlah)
-// });    

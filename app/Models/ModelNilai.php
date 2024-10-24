@@ -4,21 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ModelAkun3 extends Model
+class ModelNilai extends Model
 {
-    protected $table            = 'akun3s';
-    protected $primaryKey       = 'id_akun3';
-    protected $returnType       = 'object';
-    protected $allowedFields    = ['kode_akun3','nama_akun3','kode_akun2','kode_akun1'];
+    protected $table            = 'tbl_nilai';
+    protected $primaryKey       = 'id_nilai';
     // protected $useAutoIncrement = true;
+    protected $returnType       = 'object';
     // protected $useSoftDeletes   = false;
     // protected $protectFields    = true;
+    protected $allowedFields    = ['id_transaksi','kode_akun3','debit','kredit','id_status'];
 
     protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
-
-    protected array $casts = [];
-    protected array $castHandlers = [];
 
     // Dates
     // protected $useTimestamps = false;
@@ -43,13 +39,4 @@ class ModelAkun3 extends Model
     // protected $afterFind      = [];
     // protected $beforeDelete   = [];
     // protected $afterDelete    = [];
-
-    function ambilrelasi()
-    {
-        $builder=$this->db->table('akun3s');
-        $builder->join('akun1s','akun1s.kode_akun1 = akun3s.kode_akun1');
-        $builder->join('akun2s','akun2s.kode_akun2 = akun3s.kode_akun2');
-        $query = $builder->get();
-        return $query->getResult();
-    }
 }

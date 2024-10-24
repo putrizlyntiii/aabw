@@ -4,24 +4,24 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ModelAkun3 extends Model
+class ModelTransaksi extends Model
 {
-    protected $table            = 'akun3s';
-    protected $primaryKey       = 'id_akun3';
-    protected $returnType       = 'object';
-    protected $allowedFields    = ['kode_akun3','nama_akun3','kode_akun2','kode_akun1'];
+    protected $table            = 'tbl_transaksi';
+    protected $primaryKey       = 'id_transaksi';
     // protected $useAutoIncrement = true;
+    protected $returnType       = 'object';
     // protected $useSoftDeletes   = false;
     // protected $protectFields    = true;
+    protected $allowedFields    = ['kwitansi','tanggal','deskripsi','ketjurnal'];
 
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
+    // protected bool $allowEmptyInserts = false;
+    // protected bool $updateOnlyChanged = true;
 
-    protected array $casts = [];
-    protected array $castHandlers = [];
+    // protected array $casts = [];
+    // protected array $castHandlers = [];
 
     // Dates
-    // protected $useTimestamps = false;
+    protected $useTimestamps = true;
     // protected $dateFormat    = 'datetime';
     // protected $createdField  = 'created_at';
     // protected $updatedField  = 'updated_at';
@@ -33,7 +33,7 @@ class ModelAkun3 extends Model
     // protected $skipValidation       = false;
     // protected $cleanValidationRules = true;
 
-    // Callbacks
+    // // Callbacks
     // protected $allowCallbacks = true;
     // protected $beforeInsert   = [];
     // protected $afterInsert    = [];
@@ -43,13 +43,4 @@ class ModelAkun3 extends Model
     // protected $afterFind      = [];
     // protected $beforeDelete   = [];
     // protected $afterDelete    = [];
-
-    function ambilrelasi()
-    {
-        $builder=$this->db->table('akun3s');
-        $builder->join('akun1s','akun1s.kode_akun1 = akun3s.kode_akun1');
-        $builder->join('akun2s','akun2s.kode_akun2 = akun3s.kode_akun2');
-        $query = $builder->get();
-        return $query->getResult();
-    }
 }
