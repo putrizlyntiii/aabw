@@ -19,12 +19,12 @@
                 <form method="post" action="<?= site_url('transaksi') ?> ">
                     <?= csrf_field() ?>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label>Kwitansi</label>
                         <input type="text" class="form-control" name="kwitansi" placeholder="Kwitansi" required>
-                    </div>
+                    </div> -->
                     <div class="form-group">
-                        <label>Kwitansi</label>
+                        <label>Tanggal</label>
                         <input type="date" class="form-control" name="tanggal" placeholder="Tanggal" required>
                     </div>
                     <div class="form-group">
@@ -68,4 +68,4 @@
 
 </section>
 
-<?= $this->endSection(); ?>
+<?= $this->endSection(); ?> 

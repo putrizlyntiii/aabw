@@ -39,4 +39,14 @@ class ModelNilai extends Model
     // protected $afterFind      = [];
     // protected $beforeDelete   = [];
     // protected $afterDelete    = [];
+
+    function ambilrelasiid($id)
+    {
+        $builder = $this->db->table('tbl_nilai')
+        ->where("id_transaksi=$id")
+        ->join('akun3s','akun3s.kode_akun3 = tbl_nilai.kode_akun3')
+        ->join('tbl_status', 'tbl_status.id_status = tbl_nilai.id_status');
+        $query = $builder->get();
+        return $query->getResultObject();
+    }
 }

@@ -45,9 +45,12 @@ $routes->get('/akun3/new', 'Akun3::new');
 $routes->post('/akun3/new', 'Akun3::create');
 $routes->get('/akun3/(:segment)/edit', 'Akun3::edit/$1');
 
-
+$routes->get('/transaksi/new', 'Transaksi::new');
 $routes->get('/transaksi', 'Transaksi::index');
 $routes->post('/transaksi', 'Transaksi::create');
+$routes->get('/transaksi/(:segment)/edit', 'Transaksi::edit/$1');
+$routes->get('/transaksi/(:any)', 'Transaksi::show/$1');
+
 
 $routes->resource('akun2');
 $routes->resource('akun3');
