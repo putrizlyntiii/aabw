@@ -2,103 +2,104 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\RESTful\ResourceController;
+use App\Models\ModelTransaksi;
+use App\Models\ModelAkun3;
+use App\Models\ModelStatus;
+use App\Models\ModelNilai;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
 
 class Transaksi extends ResourceController
 {
-    protected $db;
+    protected $objAkun3;
     protected $objTransaksi;
     protected $objNilai;
-    protected $objAkun3; 
     protected $objStatus;
-
+    protected $db;
     public function __construct()
     {
         $this->db = \Config\Database::connect();
-        $this->objTransaksi = model('ModelTransaksi');
-        $this->objNilai = model('ModelNilai');
-        $this->objAkun3 = model('ModelAkun3'); 
-        $this->objStatus = model('ModelStatus');
+        $this->objTransaksi = new ModelTransaksi();
+        $this->objNilai = new ModelNilai();
+        $this->objAkun3 = new ModelAkun3();
+        $this->objStatus = new ModelStatus();
+        // Corrected the model name
     }
-
+    /**
+     * Return an array of resource objects, themselves in array format.
+     *
+     * @return ResponseInterface
+     */
     public function index()
     {
         $data['dttransaksi'] = $this->objTransaksi->findAll();
         return view('transaksi/index', $data);
     }
 
+    /**
+     * Return the properties of a resource object.
+     *
+     * @param int|string|null $id
+     *
+     * @return ResponseInterface
+     */
     public function show($id = null)
     {
         $transaksi = $this->objTransaksi->find($id);
-        if (!$transaksi) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        }
-
         $akun3 = $this->objAkun3->findAll();
         $status = $this->objStatus->findAll();
         $nilai = $this->objNilai->ambilrelasiid($id);
+        $data['dtnilai'] = $nilai;
 
-        $data = [
-            'dtakun3' => $akun3,
-            'dstatus' => $status,
-            'dttransaksi' => $transaksi,
-            'dtnilai' => $nilai,
-        ];
+        if (is_object($transaksi)) {
+            $data['dtakun3'] = $akun3;
+            $data['dtstatus'] = $status;
+            $data['dttransaksi'] = $transaksi;
 
-        return view('transaksi/show', $data);
+            return view('transaksi/show', $data);
+        } else {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
     }
 
+    /**
+     * Return a new resource object, with default properties.
+     *
+     * @return ResponseInterface
+     */
     public function new()
     {
+
         return view('transaksi/new');
     }
 
+    /**
+     * Create a new resource object, from "posted" parameters.
+     *
+     * @return ResponseInterface
+     */
     public function create()
     {
-        // Validasi input
-        $validation = \Config\Services::validation();
-        $rules = [
-            'tanggal' => 'required',
-            'deskripsi' => 'required',
-            'ketjurnal' => 'required',
-            'kode_akun3' => 'required',
-            'debit' => 'required|numeric',
-            'kredit' => 'required|numeric',
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->with('errors', $validation->getErrors())->withInput();
-        }
-
-        $this->db->transStart(); // Start transaction
-
-        // Prepare data for tbl_transaksi
-        $dataTransaksi = [
+        $data1 = [
+            // ini untuk data tbl_transaksi
+            // 'kwitansi' => $this->request->getVar('kwitansi'),
             'kwitansi' => $this->objTransaksi->noKwitansi(),
             'tanggal' => $this->request->getVar('tanggal'),
             'deskripsi' => $this->request->getVar('deskripsi'),
             'ketjurnal' => $this->request->getVar('ketjurnal'),
         ];
+        // simpan data ke tbl_transaksi
+        $this->db->table('tbl_transaksi')->insert($data1);
 
-        // Insert transaction data
-        $this->db->table('tbl_transaksi')->insert($dataTransaksi);
-        $id_transaksi = $this->db->insertID();
-
-        if ($this->db->affectedRows() <= 0) {
-            $this->db->transRollback();
-            return redirect()->back()->with('error', 'Failed to save transaction data')->withInput();
-        }
-
-        // Prepare data for tbl_nilai (details)
+        // kkita ambil ID dari tbl_transaksi
+        $id_transaksi = $this->objTransaksi->insertID();
         $kode_akun3 = $this->request->getVar('kode_akun3');
         $debit = $this->request->getVar('debit');
         $kredit = $this->request->getVar('kredit');
         $id_status = $this->request->getVar('id_status');
 
-        $dataNilai = [];
         for ($i = 0; $i < count($kode_akun3); $i++) {
-            $dataNilai[] = [
+            $data2[] = [
                 'id_transaksi' => $id_transaksi,
                 'kode_akun3' => $kode_akun3[$i],
                 'debit' => $debit[$i],
@@ -107,73 +108,52 @@ class Transaksi extends ResourceController
             ];
         }
 
-        // Insert batch of records into tbl_nilai
-        if (!$this->objNilai->insertBatch($dataNilai)) {
-            $this->db->transRollback();
-            return redirect()->back()->with('error', 'Failed to save transaction details')->withInput();
-        }
-
-        // Commit transaction
-        $this->db->transComplete();
-
+        $this->objNilai->insertBatch($data2);
         return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil di Simpan');
     }
 
+    /**
+     * Return the editable properties of a resource object.
+     *
+     * @param int|string|null $id
+     *
+     * @return ResponseInterface
+     */
     public function edit($id = null)
     {
         $transaksi = $this->objTransaksi->find($id);
-        if (!$transaksi) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        }
-
         $akun3 = $this->objAkun3->findAll();
         $status = $this->objStatus->findAll();
-        $nilai = $this->objNilai->where('id_transaksi', $id)->findAll();
+        $nilai = $this->objNilai->findAll();
+        $data['dtnilai'] = $nilai;
 
-        $data = [
-            'dtakun3' => $akun3,
-            'dstatus' => $status,
-            'dttransaksi' => $transaksi,
-            'dtnilai' => $nilai,
-        ];
+        if (is_object($transaksi)) {
+            $data['dtakun3'] = $akun3;
+            $data['dtstatus'] = $status;
+            $data['dttransaksi'] = $transaksi;
 
-        return view('transaksi/edit', $data);
-    }
-
-    public function delete($id = null)
-    {
-        if (!$this->objTransaksi->find($id)) {
-            return redirect()->back()->with('error', 'Transaction not found');
+            return view('transaksi/edit', $data);
+        } else {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
-
-        $this->objTransaksi->delete($id);
-        return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil Dihapus');
     }
 
+    /**
+     * Add or update a model resource, from "posted" properties.
+     *
+     * @param int|string|null $id
+     *
+     * @return ResponseInterface
+     */
     public function update($id = null)
     {
-        // Validasi input
-        $validation = \Config\Services::validation();
-        $rules = [
-            'tanggal' => 'required',
-            'deskripsi' => 'required',
-            'ketjurnal' => 'required',
-            'kode_akun3' => 'required',
-            'debit' => 'required|numeric',
-            'kredit' => 'required|numeric',
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->with('errors', $validation->getErrors())->withInput();
-        }
-
-        $dataTransaksi = [
+        $data1 = [
             'tanggal' => $this->request->getVar('tanggal'),
             'deskripsi' => $this->request->getVar('deskripsi'),
             'ketjurnal' => $this->request->getVar('ketjurnal'),
         ];
-        
-        $this->db->table('tbl_transaksi')->where(['id_transaksi' => $id])->update($dataTransaksi);
+        // simpan data ke tbl_transaksi
+        $this->db->table('tbl_transaksi')->where(['id_transaksi' => $id])->update($data1);
 
         $ids = $this->request->getVar('id_nilai');
         $kode_akun3 = $this->request->getVar('kode_akun3');
@@ -181,9 +161,8 @@ class Transaksi extends ResourceController
         $kredit = $this->request->getVar('kredit');
         $id_status = $this->request->getVar('id_status');
 
-        $dataNilai = [];
         foreach ($ids as $key => $value) {
-            $dataNilai[] = [
+            $result[] = [
                 'id_nilai' => $ids[$key],
                 'kode_akun3' => $kode_akun3[$key],
                 'debit' => $debit[$key],
@@ -191,23 +170,33 @@ class Transaksi extends ResourceController
                 'id_status' => $id_status[$key],
             ];
         }
+        $this->objNilai->updateBatch($result, 'id_nilai');
+        return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil di Update');
+    }
 
-        $this->objNilai->updateBatch($dataNilai, 'id_nilai');
-
-        return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil Di Update');
+    /**
+     * Delete the designated resource object from the model.
+     *
+     * @param int|string|null $id
+     *
+     * @return ResponseInterface
+     */
+    public function delete($id = null)
+    {
+        $this->objTransaksi->where(['id_transaksi' => $id])->DELETE();
+        return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil Di Hapus');
     }
 
     public function akun3()
     {
-        $akun3Model = model('ModelAkun3');
-        $result = $akun3Model->findAll();
+        $akun3 = model(ModelAkun3::class);
+        $result = $akun3->findAll();
         return $this->response->setJSON($result);
     }
-
     public function status()
     {
-        $statusModel = model('ModelStatus');
-        $result = $statusModel->findAll();
+        $status = model(ModelStatus::class);
+        $result = $status->findAll();
         return $this->response->setJSON($result);
     }
 }

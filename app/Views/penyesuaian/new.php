@@ -6,23 +6,19 @@
 <section class="section">
     <div class="section-header">
         <!-- <h1>Blank Page</h1> -->
-        <a href="<?= site_url('transaksi') ?>" class="btn btn-primary">Back</a>
+        <a href="<?= site_url('penyesuaian') ?>" class="btn btn-primary">Back</a>
     </div>
 
     <div class="section-body">
         <!-- dinamiss -->
         <div class="card">
             <div class="card-header">
-                <h4>Tambah Data Transaksi</h4>
+                <h4>Tambah Data Penyesuaian</h4>
             </div>
             <div class="card-body p-4">
-                <form method="post" action="<?= site_url('transaksi') ?> ">
+                <form method="post" action="<?= site_url('penyesuaian') ?> ">
                     <?= csrf_field() ?>
 
-                    <!-- <div class="form-group">
-                        <label>Kwitansi</label>
-                        <input type="text" class="form-control" name="kwitansi" placeholder="Kwitansi" required>
-                    </div> -->
                     <div class="form-group">
                         <label>Tanggal</label>
                         <input type="date" class="form-control" name="tanggal" placeholder="Tanggal" required>
@@ -32,9 +28,18 @@
                         <input type="text" class="form-control" name="deskripsi" placeholder="Deskripsi" required>
                     </div>
                     <div class="form-group">
-                        <label>Ket Jurnal</label>
-                        <input type="text" class="form-control" name="ketjurnal" placeholder="Ket Jurnal" required>
+                        <label>Nilai yang disesuaikan</label>
+                        <input type="text" class="form-control" onkeyup="hitung()" name="nilai" placeholder="nilai" required>
                     </div>
+                    <div class="form-group">
+                        <label>waktu yang disesuaikan</label>
+                        <input type="text" class="form-control" onkeyup="hitung()" name="waktu" placeholder="waktu" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah disesuaikan</label>
+                        <input type="text" class="form-control" name="jumlah" placeholder="jumlah" readonly required>
+                    </div>
+
 
                     <div class="box-body">
                         <table class="table table-bordered" id="tableLoop">

@@ -93,3 +93,13 @@ function FormSelectStatus(Nomor) {
             $('#id_status' + Nomor).html(output.join(''));
         });
 }
+
+function hitung(){
+    var nilai = $('input[name="nilai"]').val();
+    var waktu = $('input[name="nilai"]').val();
+    var jumlah = parseInt(nilai) / parseInt(waktu);
+    $('input[name="jumlah"]').val(jumlah);
+
+
+
+}
