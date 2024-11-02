@@ -37,37 +37,33 @@ $routes->post('/akun1', 'Akun1::store');
 $routes->put('/akun1/edit/(:any)', 'Akun1::update/$1');
 $routes->delete('/akun1/(:any)', 'Akun1::destroy/$1');
 
-$routes->resource('akun2');
 $routes->get('/akun2/new', 'Akun2::new');
 $routes->get('/akun2/(:segment)/edit', 'Akun2::edit/$1');
 $routes->post('/akun2/(:any)', 'Akun2::delete/$1');
 
-$routes->resource('akun3');
 $routes->get('/akun3/new', 'Akun3::new');
 $routes->post('/akun3/new', 'Akun3::create');
 $routes->get('/akun3/(:segment)/edit', 'Akun3::edit/$1');
 
-$routes->resource('transaksi');
 $routes->get('/transaksi/new', 'Transaksi::new');
 $routes->get('/transaksi', 'Transaksi::index');
 $routes->post('/transaksi', 'Transaksi::create');
 $routes->get('/transaksi/(:segment)/edit', 'Transaksi::edit/$1');
 $routes->get('/transaksi/(:any)', 'Transaksi::show/$1');
 
-$routes->resource('penyesuaian');
-$routes->get('/penyesuaian', 'Penyesuaian::index');
+
 $routes->get('/penyesuaian/new', 'Penyesuaian::new');
-$routes->post('/penyesuaian(any)', 'penyesuaian::delete/$1');
+$routes->get('/penyesuaian', 'Penyesuaian::index');
+$routes->post('/penyesuaian/(:any)', 'Penyesuaian::delete/$1');
 $routes->get('/penyesuaian/(:segment)/edit', 'Penyesuaian::edit/$1');
-$routes->get('/penyesuaian/(any)', 'Penyesuaian::show/$1');
+$routes->get('/penyesuaian/(:any)', 'Penyesuaian::show/$1');
 
+$routes->post('/jurnalumum', 'JurnalUmum::index');
 
-
-
-
-
-
-
+$routes->resource('akun2');
+$routes->resource('akun3');
+$routes->resource('transaksi');
+$routes->resource('penyesuaian');
 
 /*
  * --------------------------------------------------------------------

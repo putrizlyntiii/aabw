@@ -1,24 +1,47 @@
+/**
+ *
+ * You can write your JS code here, DO NOT touch the default style file
+ * because it will make it harder for you to update.
+ *
+ */
+
 "use strict";
 
 function hapus(id){
     $('#del-'+id).submit();
 }
 
-//menu dinamis
+// confirmasi delete 
+function hapus(id) {
+    $('#del-'+id).submit()
+};
+
+// menu dinamis
 var path = location.pathname.split('/')
 var url = location.origin + '/' + path[1]
-$('ul.sidebar-menu li a').each(function(){
-if ($(this).attr('href').indexOf(url) !==-1) {
-    $(this).parent().addClass('active').parent().parent('li').addClass('active')
-}
+$('ul.sidebar-menu li a').each(function () {
+    if ($(this).attr('href').indexOf(url) !== -1) {
+        $(this).parent().addClass('active').parent().parent('li').addClass('active')
+    }
 });
 
-//pagination
-$(document).ready(function() {
+// pagination
+$(document).ready(function () {
     $('#myTable').DataTable();
 });
+$(document).ready(function () {
+    $('#repotTable').DataTable({
+        "searching": false,
+        "paging": false,
+        "ordering":false,
+    });
+});
 
+// input transaksi
 function Barisbaru() {
+    // $(document).ready(function() {
+    //     $("[data-toggle='tooltip']").tooltip();
+    // });
     var Nomor = $("#tableLoop tbody tr").length + 1;
     var Baris = '<tr>';
         Baris += '<td class="text-center">' + Nomor + '</td>';
@@ -94,12 +117,12 @@ function FormSelectStatus(Nomor) {
         });
 }
 
-function hitung(){
+
+function hitung() {
     var nilai = $('input[name="nilai"]').val();
-    var waktu = $('input[name="nilai"]').val();
+    var waktu = $('input[name="waktu"]').val();
     var jumlah = parseInt(nilai) / parseInt(waktu);
     $('input[name="jumlah"]').val(jumlah);
-
-
+    
 
 }

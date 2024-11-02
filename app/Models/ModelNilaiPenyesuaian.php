@@ -29,4 +29,16 @@ class ModelNilaiPenyesuaian extends Model
     // protected $afterFind      = [];
     // protected $beforeDelete   = [];
     // protected $afterDelete    = [];
+
+    
+    function ambilrelasiid($id)
+    {
+        $builder = $this->db->table('tbl_nilaipenyesuaian')
+        ->where("id_penyesuaian=$id")
+        ->join('akun3s','akun3s.kode_akun3 = tbl_nilaipenyesuaian.kode_akun3')
+        ->join('tbl_status', 'tbl_status.id_status = tbl_nilaipenyesuaian.id_status');
+        
+        $query = $builder->get();
+        return $query->getResultObject();
+    }
 }
