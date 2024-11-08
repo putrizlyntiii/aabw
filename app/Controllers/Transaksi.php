@@ -16,6 +16,7 @@ class Transaksi extends ResourceController
     protected $objNilai;
     protected $objStatus;
     protected $db;
+    
     public function __construct()
     {
         $this->db = \Config\Database::connect();
@@ -146,46 +147,62 @@ class Transaksi extends ResourceController
      * @return ResponseInterface
      */
     public function update($id = null)
-    {
-        $data1 = [
-            'tanggal' => $this->request->getVar('tanggal'),
-            'deskripsi' => $this->request->getVar('deskripsi'),
-            'ketjurnal' => $this->request->getVar('ketjurnal'),
-        ];
-        // simpan data ke tbl_transaksi
-        $this->db->table('tbl_transaksi')->where(['id_transaksi' => $id])->update($data1);
+{
+    $data1 = [
+        'tanggal' => $this->request->getVar('tanggal'),
+        'deskripsi' => $this->request->getVar('deskripsi'),
+        'ketjurnal' => $this->request->getVar('ketjurnal'),
+    ]; // Pastikan ini ditutup dengan benar
 
-        $ids = $this->request->getVar('id_nilai');
-        $kode_akun3 = $this->request->getVar('kode_akun3');
-        $debit = $this->request->getVar('debit');
-        $kredit = $this->request->getVar('kredit');
-        $id_status = $this->request->getVar('id_status');
+    // Simpan data ke tbl_transaksi
+    $this->db->table('tbl_transaksi')->where(['id_transaksi' => $id])->update($data1);
 
+    // Ambil data nilai transaksi
+    $ids = $this->request->getVar('id'); // Pastikan ini adalah array
+    $kode_akun3 = $this->request->getVar('kode_akun');
+    $debit = $this->request->getVar('debit');
+    $kredit = $this->request->getVar('kredit');
+    $id_status = $this->request->getVar('status'); // Sesuaikan dengan nama input di form
+
+    $result = []; // Inisialisasi array hasil
+    if (is_array($ids) && !empty($ids)) {
         foreach ($ids as $key => $value) {
             $result[] = [
-                'id_nilai' => $ids[$key],
+                'id' => $ids[$key],
                 'kode_akun3' => $kode_akun3[$key],
                 'debit' => $debit[$key],
                 'kredit' => $kredit[$key],
                 'id_status' => $id_status[$key],
             ];
         }
-        $this->objNilai->updateBatch($result, 'id_nilai');
-        return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil di Update');
+
+        // Pastikan ada data untuk diupdate
+        if (!empty($result)) {
+            $this->objNilai->updateBatch($result, 'id');
+        }
     }
 
-    /**
-     * Delete the designated resource object from the model.
-     *
-     * @param int|string|null $id
-     *
-     * @return ResponseInterface
-     */
-    public function delete($id = null)
-    {
-        $this->objTransaksi->where(['id_transaksi' => $id])->DELETE();
+    return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil di Update');
+}
+
+/**
+ * Delete the designated resource object from the model.
+ *
+ * @param int|string|null $id
+ *
+ * @return ResponseInterface
+ */
+public function delete($id = null)
+{
+    // Pastikan $id tidak kosong sebelum melakukan delete
+    if ($id) {
+        $this->objTransaksi->where(['id_transaksi' => $id])->delete(); // Gunakan delete() dengan huruf kecil
         return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil Di Hapus');
+    } else {
+        return redirect()->to(site_url('transaksi'))->with('error', 'ID tidak valid');
     }
+}
+
 
     public function akun3()
     {

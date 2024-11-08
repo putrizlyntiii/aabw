@@ -8,14 +8,14 @@
 /*# sourceMappingURL=custom.css.map */
 
 .judul{
-    background-color:#6777ef;
+    background-color:darkorchid;
     font-style: italic;
     font-weight: bold;
     text-align: right;
     color: aliceblue;
 }
 .khusus{
-    background-color:chocolate;
+    background-color:rgb(210, 30, 129);
     font-style: italic;
     font-weight: bold;
     text-align: right;

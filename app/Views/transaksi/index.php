@@ -37,7 +37,7 @@
         <!-- dinamiss -->
         <div class="card">
             <div class="card-header">
-                <h4>Data Akun 3</h4>
+                <h4>Data transaksi</h4>
             </div>
             <div class="card-body p-4">
                 <div class="table-responsive">
