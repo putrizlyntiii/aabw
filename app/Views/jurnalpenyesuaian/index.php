@@ -2,6 +2,11 @@
 
 <?= $this->section('content') ?>
 <title>SIA-IPB &mdash; Jurnal Penyesuaian</title>
+<?= $this->endSection(); ?>
+
+
+
+<?= $this->section('content') ?>
 
 <section class="section">
     <div class="section-header">
@@ -19,9 +24,10 @@
                     <div class="col">
                         <input type="date" class="form-control" name="tglakhir" value="<?= $tglakhir ?>">
                     </div>
+
                     <div class="col">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-list"></i> Tampilkan</button>
-                        <input type="submit" class="btn btn-success" formtarget="_blank" formaction="jurnalpenyesuaian/cetakj_ppdf" value="Cetak PDF">
+                        <input type="submit" class="btn btn-success" formtarget="_blank" formaction="jurnalpenyesuaian/cetak_jppdf" value="Cetak PDF">
                     </div>
                 </div>
             </form>
@@ -44,32 +50,50 @@
                         <?php
                         $td = 0;
                         $tk = 0;
-                        foreach ($dttransaksi as $key => $value) :
+                        ?>
+                        <?php foreach ($dttransaksi as $key => $value) : ?>
+
+                            <?php
                             $d = $value->jumdebit;
                             $k = $value->jumkredit;
                             $neraca = $d - $k;
 
-                            $kreditnew = $neraca < 0 ? abs($neraca) : 0;
-                            $debitnew = $neraca > 0 ? $neraca : 0;
+                            if ($neraca < 0) {
+                                $kreditnew = abs($neraca);
+                                $tk = $tk + $kreditnew;
+                            } else {
+                                $kreditnew = 0;
+                            }
 
-                            $td += $debitnew;
-                            $tk += $kreditnew;
-                        ?>
+                            if ($neraca > 0) {
+                                $debitnew = $neraca;
+                                $td = $td + $debitnew;
+                            } else {
+                                $debitnew = 0;
+                            }
+                            ?>
+
+
                             <tr>
                                 <td><?= $value->kode_akun3 ?></td>
                                 <td><?= $value->nama_akun3 ?></td>
                                 <td class="text-right"><?= number_format($debitnew, 0, ",", ",") ?></td>
                                 <td class="text-right"><?= number_format($kreditnew, 0, ",", ",") ?></td>
                             </tr>
+
                         <?php endforeach; ?>
                     </tbody>
+
                     <tfoot class="judul">
                         <tr>
-                            <td colspan="2" class="text-center font-weight-bold">Total</td>
-                            <td class="text-right font-weight-bold"><?= number_format($td, 0, ",", ",") ?></td>
-                            <td class="text-right font-weight-bold"><?= number_format($tk, 0, ",", ",") ?></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-right"><?= number_format($td, 0, ",", ".") ?></td>
+                            <td class="text-right"><?= number_format($tk, 0, ",", ".") ?></td>
+
                         </tr>
                     </tfoot>
+
                 </table>
             </div>
         </div>

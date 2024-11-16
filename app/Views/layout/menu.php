@@ -25,9 +25,9 @@
                         <li class="nav-item dropdown">
                             <a href="<?= site_url('laporan keuangan') ?>" class="nav-link has-dropdown"><i class="fas fa-th"></i> <span>Laporan Keuangan</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="<?= site_url('laporan keuangan') ?>">Laba Rugi</a></li>
-                                <li><a class="nav-link" href="#">Perubahan Modal</a></li>
-                                <li><a class="nav-link" href="#">Neraca</a></li>
-                                <li><a class="nav-link" href="#">Arus Kas</a></li>
+                                <li><a class="nav-link" href="<?= site_url('labarugi') ?>">Laba Rugi</a></li>
+                                <li><a class="nav-link" href="<?= site_url('pmodal') ?>">Perubahan Modal</a></li>
+                                <li><a class="nav-link" href="<?= site_url('neraca') ?>">Neraca</a></li>
+                                <li><a class="nav-link" href="<?= site_url('aruskas') ?>">Arus Kas</a></li>
                             </ul>
                         </li>

@@ -10,7 +10,8 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use TCPDF;
 
-class Posting extends BaseController
+
+class LabaRugi extends BaseController
 {
     public function __construct()
     {
@@ -25,33 +26,35 @@ class Posting extends BaseController
     {
         $tglawal = $this->request->getVar('tglawal') ? $this->request->getVar('tglawal') : '';
         $tglakhir = $this->request->getVar('tglakhir') ? $this->request->getVar('tglakhir') : '';
-        $kode_akun3 = $this->request->getVar('kode_akun3') ? $this->request->getVar('kode_akun3') : '';
 
-        $rowdata = $this->objTransaksi->get_posting($tglawal, $tglakhir, $kode_akun3);
+        $rowdata = $this->objTransaksi->get_labarugi($tglawal, $tglakhir);
+
         $data['dttransaksi'] = $rowdata;
         $data['tglawal'] = $tglawal;
         $data['tglakhir'] = $tglakhir;
-        $data['kode_akun3'] = $kode_akun3;
-        $data['dtakun3'] = $this->objAkun3->ambilrelasi();
-        return view('posting/index', $data);
+
+        // echo "<pre>";
+        // echo print_r($data);
+        // echo "<pre>";
+        // die;
+
+        return view('labarugi/index', $data);
     }
 
-    public function postingpdf()
+    public function labarugipdf()
     {
         $tglawal = $this->request->getVar('tglawal') ? $this->request->getVar('tglawal') : '';
         $tglakhir = $this->request->getVar('tglakhir') ? $this->request->getVar('tglakhir') : '';
-        $kode_akun3 = $this->request->getVar('kode_akun3') ? $this->request->getVar('kode_akun3') : '';
 
-        $rowdata = $this->objTransaksi->get_posting($tglawal, $tglakhir, $kode_akun3);
+        $rowdata = $this->objTransaksi->get_labarugi($tglawal, $tglakhir);
+
         $data['dttransaksi'] = $rowdata;
         $data['tglawal'] = $tglawal;
         $data['tglakhir'] = $tglakhir;
-        $data['kode_akun3'] = $kode_akun3;
-        $data['dtakun3'] = $this->objAkun3->ambilrelasi();
 
-        $html = view('posting/postingpdf', $data);
+        $html = view('labarugi/labarugipdf', $data);
 
-        $pdf = new TCPDF('P', PDF_UNIT, 'A4', true, 'UTF-8', false);    
+        $pdf = new TCPDF('P', PDF_UNIT, 'A4', true, 'UTF-8', false);
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->SetMargins(30, 4, 3);
@@ -59,6 +62,6 @@ class Posting extends BaseController
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
         $this->response->setContentType('application/pdf');
-        $pdf->Output('posting.pdf', 'I');
+        $pdf->Output('labarugi.pdf', 'I');
     }
 }

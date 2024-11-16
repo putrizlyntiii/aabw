@@ -43,8 +43,13 @@
                                 <td class="text-center" colspan="2">Jurnal Penyesuaian</td>
                                 <td class="text-center" colspan="2">NS.yang Disesuaikan</td>
                                 <td class="text-center" colspan="2">Laba Rugi</td>
+                                <td class="text-center" colspan="2">Neraca</td>
                             </tr>
                             <tr>
+                                <td class="text-right">Debit</td>
+                                <td class="text-right">Kredit</td>
+                                <td class="text-right">Debit</td>
+                                <td class="text-right">Kredit</td>
                                 <td class="text-right">Debit</td>
                                 <td class="text-right">Kredit</td>
                                 <td class="text-right">Debit</td>
@@ -55,7 +60,7 @@
                         </thead>
                         <tbody>
                             <?php 
-                            $td = $tk = $tdjp = $tkjp = $totd = $totk = 0; 
+                            $td = $tk = $tdjp = $tkjp = $totd = $totk = $lb_td = $lb_tk = $totns = $totkd = 0; 
                             ?>
                             <?php foreach ($dttransaksi as $key => $value) : ?>
                                 <?php
@@ -83,7 +88,42 @@
                                 $kres = $ns < 0 ? abs($ns) : 0;
                                 $totd += $debs;
                                 $totk += $kres;
+
+                                // laba rugi
+                                $kode_akun = $value->kode_akun3;
+                                $kode = substr($kode_akun, 0, 1);
+
+                                if ($kode == '4') {
+                                    $lb_db = $kres;
+                                    $lb_td += $lb_db;
+                                } else {
+                                    $lb_db = 0;
+                                }
+
+                                if ($kode == '5') {
+                                    $lb_kr = $debs;
+                                    $lb_tk += $lb_kr;
+                                } else {
+                                    $lb_kr = 0;
+                                }
+
+                                // Neraca
+                                if ($kode <= 4 && $ns > 0) {
+                                    $nrbs = $debs;
+                                    $totns += $nrbs;
+                                } else {
+                                    $nrbs = 0;
+                                }
+
+                                if ($kode <= 4 && $ns < 0) {
+                                    $nrkd = abs($ns);
+                                    $totkd += $nrkd;
+                                } else {
+                                    $nrkd = 0;
+                                }
+
                                 ?>
+
 
                                 <tr>
                                     <td><?= $value->kode_akun3 ?></td>
@@ -94,6 +134,10 @@
                                     <td class="text-right"><?= number_format($kreditnewjp, 0, ",", ",") ?></td>
                                     <td class="text-right"><?= number_format($debs, 0, ",", ",") ?></td>
                                     <td class="text-right"><?= number_format($kres, 0, ",", ",") ?></td>
+                                    <td class="text-right"><?= number_format($lb_db, 0, ",", ",") ?></td>
+                                    <td class="text-right"><?= number_format($lb_kr, 0, ",", ",") ?></td>
+                                    <td class="text-right"><?= number_format($nrbs, 0, ",", ",") ?></td>
+                                    <td class="text-right"><?= number_format($nrkd, 0, ",", ",") ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -108,6 +152,10 @@
                                 <td class="text-right"><?= number_format($tkjp, 0, ",", ",") ?></td>
                                 <td class="text-right"><?= number_format($totd, 0, ",", ",") ?></td>
                                 <td class="text-right"><?= number_format($totk, 0, ",", ",") ?></td>
+                                <td class="text-right"><?= number_format($lb_td, 0, ",", ",") ?></td>
+                                <td class="text-right"><?= number_format($lb_tk, 0, ",", ",") ?></td>
+                                <td class="text-right"><?= number_format($totns, 0, ",", ",") ?></td>
+                                <td class="text-right"><?= number_format($totkd, 0, ",", ",") ?></td>
                             </tr>
                         </tfoot>
                     </table>
