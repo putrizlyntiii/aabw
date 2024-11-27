@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\ModelTransaksi;
 use App\Models\ModelAkun3;
+use App\Models\ModelTransaksi;
 use App\Models\ModelStatus;
 use App\Models\ModelNilai;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -11,11 +11,18 @@ use CodeIgniter\RESTful\ResourceController;
 
 class Transaksi extends ResourceController
 {
-    protected $objAkun3;
     protected $objTransaksi;
-    protected $objNilai;
-    protected $objStatus;
     protected $db;
+    protected $objNilai;
+    protected $objAkun3;
+    protected $objStatus;
+
+    /**
+     * Return an array of resource objects, themselves in array format.
+     *
+     * @return ResponseInterface
+     */
+
     public function __construct()
     {
         $this->db = \Config\Database::connect();
@@ -23,19 +30,16 @@ class Transaksi extends ResourceController
         $this->objNilai = new ModelNilai();
         $this->objAkun3 = new ModelAkun3();
         $this->objStatus = new ModelStatus();
+
+
         // Corrected the model name
     }
-    /**
-     * Return an array of resource objects, themselves in array format.
-     *
-     * @return ResponseInterface
-     */
+
     public function index()
     {
         $data['dttransaksi'] = $this->objTransaksi->findAll();
         return view('transaksi/index', $data);
     }
-
     /**
      * Return the properties of a resource object.
      *
@@ -56,6 +60,7 @@ class Transaksi extends ResourceController
             $data['dtstatus'] = $status;
             $data['dttransaksi'] = $transaksi;
 
+
             return view('transaksi/show', $data);
         } else {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
@@ -69,7 +74,6 @@ class Transaksi extends ResourceController
      */
     public function new()
     {
-
         return view('transaksi/new');
     }
 
@@ -91,12 +95,13 @@ class Transaksi extends ResourceController
         // simpan data ke tbl_transaksi
         $this->db->table('tbl_transaksi')->insert($data1);
 
-        // kkita ambil ID dari tbl_transaksi
+        // kita ambil ID dari tbl_transaksi
         $id_transaksi = $this->objTransaksi->insertID();
         $kode_akun3 = $this->request->getVar('kode_akun3');
         $debit = $this->request->getVar('debit');
         $kredit = $this->request->getVar('kredit');
         $id_status = $this->request->getVar('id_status');
+
 
         for ($i = 0; $i < count($kode_akun3); $i++) {
             $data2[] = [
@@ -104,13 +109,14 @@ class Transaksi extends ResourceController
                 'kode_akun3' => $kode_akun3[$i],
                 'debit' => $debit[$i],
                 'kredit' => $kredit[$i],
-                'id_status' => $id_status[$i],
+                'id_status' => $id_status[$i]
             ];
         }
-
         $this->objNilai->insertBatch($data2);
         return redirect()->to(site_url('transaksi'))->with('success', 'Data Berhasil di Simpan');
-    }
+    } 
+
+
 
     /**
      * Return the editable properties of a resource object.
@@ -132,6 +138,7 @@ class Transaksi extends ResourceController
             $data['dtstatus'] = $status;
             $data['dttransaksi'] = $transaksi;
 
+
             return view('transaksi/edit', $data);
         } else {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
@@ -145,12 +152,14 @@ class Transaksi extends ResourceController
      *
      * @return ResponseInterface
      */
+
     public function update($id = null)
     {
         $data1 = [
             'tanggal' => $this->request->getVar('tanggal'),
             'deskripsi' => $this->request->getVar('deskripsi'),
             'ketjurnal' => $this->request->getVar('ketjurnal'),
+
         ];
         // simpan data ke tbl_transaksi
         $this->db->table('tbl_transaksi')->where(['id_transaksi' => $id])->update($data1);
@@ -193,6 +202,7 @@ class Transaksi extends ResourceController
         $result = $akun3->findAll();
         return $this->response->setJSON($result);
     }
+
     public function status()
     {
         $status = model(ModelStatus::class);

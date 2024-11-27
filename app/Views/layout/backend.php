@@ -221,8 +221,8 @@
                         </div>
                     </li>
                     <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                            <img alt="image" src="<?= base_url() ?>/template/assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
-                            <div class="d-sm-none d-lg-inline-block">Hi, Putri Zaliyanti Ramadhani</div>
+                            <img alt="image" src="<?= base_url('imgFiles/' . user()->gbr)?>" class="rounded-circle mr-1">
+                            <div class="d-sm-none d-lg-inline-block"><?= user()->fullname ?></div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="dropdown-title">Logged in 5 min ago</div>
@@ -236,8 +236,16 @@
                                 <i class="fas fa-cog"></i> Settings
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item has-icon text-danger">
+                            <?php if (logged_in()) { ?>
+                                <!-- <a href="/logout" class="dropdown-item has-icon text-danger">
+                                <i class="fas fa-sign-out-alt"></i> Logout -->
+                                <a href="/logout" class="dropdown-item has-icon text-danger">
                                 <i class="fas fa-sign-out-alt"></i> Logout
+                            <?php } else { ?>
+                                <a href="/login" class="dropdown-item has-icon text-danger">
+                                <i class="fas fa-sigin-alt"></i> Login
+                            <?php } ?>
+                           
                             </a>
                         </div>
                     </li>

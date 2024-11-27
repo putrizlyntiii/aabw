@@ -31,3 +31,7 @@
                                 <li><a class="nav-link" href="<?= site_url('aruskas') ?>">Arus Kas</a></li>
                             </ul>
                         </li>
+
+                        <?php if(in_groups('admin')) : ?>
+                        <li class="#"><a class="nav-link" href="<?= site_url('admin') ?>"><i class="fas fa-users"></i> <span>user</span></a></li>
+                        <?php endif; ?>
