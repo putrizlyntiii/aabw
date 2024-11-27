@@ -7,10 +7,6 @@
 
 "use strict";
 
-function hapus(id){
-    $('#del-'+id).submit();
-}
-
 // confirmasi delete 
 function hapus(id) {
     $('#del-'+id).submit()
@@ -25,10 +21,11 @@ $('ul.sidebar-menu li a').each(function () {
     }
 });
 
-// pagination
+// datatables dan pagination
 $(document).ready(function () {
     $('#myTable').DataTable();
 });
+
 $(document).ready(function () {
     $('#repotTable').DataTable({
         "searching": false,
@@ -37,11 +34,12 @@ $(document).ready(function () {
     });
 });
 
+
 // input transaksi
 function Barisbaru() {
-    // $(document).ready(function() {
-    //     $("[data-toggle='tooltip']").tooltip();
-    // });
+    $(document).ready(function() {
+        $("[data-toggle='tooltip']").tooltip();
+    });
     var Nomor = $("#tableLoop tbody tr").length + 1;
     var Baris = '<tr>';
         Baris += '<td class="text-center">' + Nomor + '</td>';
@@ -76,7 +74,7 @@ $(document).ready(function () {
     for (A = 1; A <= 1; A++) {
         Barisbaru();
     }
-    $('#BarisBaru').click(function(e) {
+    $('#Barisbaru').click(function(e) {
         e.preventDefault();
         Barisbaru();
     });
@@ -117,12 +115,26 @@ function FormSelectStatus(Nomor) {
         });
 }
 
-
 function hitung() {
     var nilai = $('input[name="nilai"]').val();
     var waktu = $('input[name="waktu"]').val();
+
     var jumlah = parseInt(nilai) / parseInt(waktu);
     $('input[name="jumlah"]').val(jumlah);
     
-
+    // $("#jumlah").attr("value", jumlah);
+    // if (!isNaN()) {
+    //         $('input[name="jumlah"]').val(hasil);   
+    //     } else {
+    //         $('input[name="jumlah"]').val(0);   
+    // }
 }
+
+    
+
+// $(".penyesuaian").keyup(function() {
+//     var nilai = parseInt($("#nilai").val())
+//     var waktu = parseInt($("#waktu").val())
+//     var jumlah = nilai / waktu;
+//     $("#jumlah").attr("value", jumlah)
+// });

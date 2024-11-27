@@ -6,10 +6,17 @@ use App\Models\ModelAkun3;
 use App\Models\ModelStatus;
 use App\Models\ModelPenyesuaian;
 use App\Models\ModelNilaiPenyesuaian;
+use CodeIgniter\HTTP\ResponseInterface; 
 use CodeIgniter\RESTful\ResourceController;
 
-class Penyesuaian extends BaseController
+class Penyesuaian extends ResourceController
 {
+    /**
+     * Return an array of resource objects, themselves in array format.
+     *
+     * @return ResponseInterface
+     */
+
     public function __construct()
     {
         $this->db = \Config\Database::connect();
@@ -18,26 +25,32 @@ class Penyesuaian extends BaseController
         $this->objAkun3 = new ModelAkun3();
         $this->objStatus = new ModelStatus();
     }
-
-
+ 
     public function index()
     {
         $data['dtpenyesuaian'] = $this->objPenyesuaian->findAll();
         return view('penyesuaian/index', $data);
     }
 
+    /**
+     * Return the properties of a resource object.
+     *
+     * @param int|string|null $id
+     *
+     * @return ResponseInterface
+     */
     public function show($id = null)
     {
         $penyesuaian = $this->objPenyesuaian->find($id);
         $akun3 = $this->objAkun3->findAll();
         $status = $this->objStatus->findAll();
         $nilai = $this->objNilaiPenyesuaian->ambilrelasiid($id);
+        $data['dtnilaipenyesuaian'] =$nilai;
 
-        if ($penyesuaian) {
-            $data['dtpenyesuaian'] = $penyesuaian; // Perbaikan di sini
-            $data['dtnilaipenyesuaian'] = $nilai;
+        if(is_object($penyesuaian)) {
             $data['dtakun3'] = $akun3;
             $data['dtstatus'] = $status;
+            $data['dtpenyesuaian'] = $penyesuaian;
 
             return view('penyesuaian/show', $data);
         } else {
@@ -45,10 +58,21 @@ class Penyesuaian extends BaseController
         }
     }
 
+    /**
+     * Return a new resource object, with default properties.
+     *
+     * @return ResponseInterface
+     */
     public function new()
     {
         return view('penyesuaian/new');
     }
+
+    /**
+     * Create a new resource object, from "posted" parameters.
+     *
+     * @return ResponseInterface
+     */
 
     public function create()
     {
@@ -59,98 +83,101 @@ class Penyesuaian extends BaseController
             'waktu' => $this->request->getVar('waktu'),
             'jumlah' => $this->request->getVar('jumlah'),
         ];
-
-        // Simpan data ke tbl_penyesuaian
+        // simpan data ke tbl_penyesuaian
         $this->db->table('tbl_penyesuaian')->insert($data1);
 
-        // Ambil ID dari tbl_penyesuaian
-        $id_penyesuaian = $this->db->insertID(); // Menggunakan insertID dari koneksi DB
+        // kita ambil ID dari tbl_penyesuaian
+        $id_penyesuaian = $this->objPenyesuaian->insertID();
         $kode_akun3 = $this->request->getVar('kode_akun3');
         $debit = $this->request->getVar('debit');
         $kredit = $this->request->getVar('kredit');
         $id_status = $this->request->getVar('id_status');
 
-        // Siapkan data untuk disimpan di tbl_nilai_penyesuaian
-        $data2 = [];
         for ($i = 0; $i < count($kode_akun3); $i++) {
             $data2[] = [
                 'id_penyesuaian' => $id_penyesuaian,
                 'kode_akun3' => $kode_akun3[$i],
                 'debit' => $debit[$i],
                 'kredit' => $kredit[$i],
-                'id_status' => $id_status[$i],
+                'id_status' => $id_status[$i]
             ];
         }
-
-        // Simpan batch data
-        if (!empty($data2)) {
-            $this->objNilaiPenyesuaian->insertBatch($data2);
-        }
-
-        return redirect()->to(site_url('penyesuaian'))->with('success', 'Data Berhasil disimpan');
+        $this->objNilaiPenyesuaian->insertBatch($data2);
+        return redirect()->to(site_url('penyesuaian'))->with('success', 'Data Berhasil di Simpan');
     }
 
-        public function edit($id = null)
-        {
+    /**
+     * Return the editable properties of a resource object.
+     *
+     * @param int|string|null $id
+     *
+     * @return ResponseInterface
+     */
+    public function edit($id = null)
+    {
         $penyesuaian = $this->objPenyesuaian->find($id);
         $akun3 = $this->objAkun3->findAll();
         $status = $this->objStatus->findAll();
         $nilai = $this->objNilaiPenyesuaian->findAll();
-        
-        if (is_object($penyesuaian)) {
-            $data = [
-                'dtpenyesuaian' => $penyesuaian, // Sesuaikan nama variabel
-                'dtakun3' => $akun3,
-                'dtstatus' => $status,
-                'dtnilai' => $nilai // Pastikan ini sesuai dengan yang ada di view
-            ];
+        $data['dtnilaipenyesuaian'] =$nilai;
 
-                return view('penyesuaian/edit', $data);
-            } else {
-                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-            }
+        if(is_object($penyesuaian)) {
+            $data['dtakun3'] = $akun3;
+            $data['dtstatus'] = $status;
+            $data['dtpenyesuaian'] = $penyesuaian;
+
+            return view('penyesuaian/edit', $data);
+        } else {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
+    }
 
+    /**
+     * Add or update a model resource, from "posted" properties.
+     *
+     * @param int|string|null $id
+     *
+     * @return ResponseInterface
+     */
+    public function update($id = null)
+    {
+        $data1=[
+            'tanggal' => $this->request->getVar('tanggal'),
+            'deskripsi' => $this->request->getVar('deskripsi'),
+            'nilai' => $this->request->getVar('nilai'),
+            'waktu' => $this->request->getVar('waktu'),
+            'jumlah' => $this->request->getVar('jumlah'),
+        ];
+        // simpan data ke tbl_penyesuaian
+        $this->db->table('tbl_penyesuaian')->where(['id_penyesuaian' => $id])->update($data1);
 
-        public function update($id = null)
-        {
-            $data1 = [
-                'tanggal' => $this->request->getVar('tanggal'),
-                'deskripsi' => $this->request->getVar('deskripsi'),
-                'nilai' => $this->request->getVar('nilai'),
-                'waktu' => $this->request->getVar('waktu'),
-                'jumlah' => $this->request->getVar('jumlah'),
+        $ids = $this->request->getVar('id');
+        $kode_akun3 = $this->request->getVar('kode_akun3');
+        $debit = $this->request->getVar('debit');
+        $kredit = $this->request->getVar('kredit');
+        $id_status = $this->request->getVar('id_status');
+
+        foreach ($ids as $key => $value) {
+            $result[]=[
+                'id' => $ids[$key],
+                'kode_akun3'=> $kode_akun3[$key],
+                'debit'=> $debit[$key],
+                'kredit'=> $kredit[$key],
+                'id_status'=> $id_status[$key],
             ];
-        
-            // Simpan data ke tbl_penyesuaian
-            $this->db->table('tbl_penyesuaian')->where(['id_penyesuaian' => $id])->update($data1);
-        
-            // Ambil data nilai penyesuaian
-            $ids = $this->request->getVar('id'); // Pastikan ini adalah array
-            $kode_akun3 = $this->request->getVar('kode_akun');
-            $debit = $this->request->getVar('debit');
-            $kredit = $this->request->getVar('kredit');
-            $id_status = $this->request->getVar('status'); // Sesuaikan dengan nama input di form
-        
-            $result = []; // Inisialisasi array hasil
-            foreach ($ids as $key => $value) {
-                $result[] = [
-                    'id' => $ids[$key],
-                    'kode_akun3' => $kode_akun3[$key],
-                    'debit' => $debit[$key],
-                    'kredit' => $kredit[$key],
-                    'id_status' => $id_status[$key],
-                ];
-            }
-        
-            // Pastikan ada data untuk diupdate
-            if (!empty($result)) {
-                $this->objNilaiPenyesuaian->updateBatch($result, 'id');
-            }
-        
-            return redirect()->to(site_url('penyesuaian'))->with('success', 'Data Berhasil di Update');
         }
-        
+        $this->objNilaiPenyesuaian->updateBatch($result, 'id');
+        return redirect()->to(site_url('penyesuaian'))->with('success', 'Data Berhasil di Update');
+ 
+    }
+
+    /**
+     * Delete the designated resource object from the model.
+     *
+     * @param int|string|null $id
+     *
+     * @return ResponseInterface
+     */
     public function delete($id = null)
     {
         $this->objPenyesuaian->where(['id_penyesuaian' => $id])->DELETE();
